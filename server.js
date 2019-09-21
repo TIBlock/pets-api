@@ -38,6 +38,11 @@ var owners = [
 
 // GET /api/owners
 
+app.get('/api/owners', (req, res, nextFn) => {
+    console.log(req.params)
+    res.send('this is a test')
+});
+
 // GET /api/owners/:id
 
 // POST /api/owners
