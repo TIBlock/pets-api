@@ -5,6 +5,7 @@ var uuidv1 = require('uuid/v1');
 var app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.json()) 
 
 var owners = [
     {
@@ -70,7 +71,8 @@ app.post('/api/owners', (req, res, nextFn) => {
 
 app.put('/api/owners/:id', (req, res, nextFn) => {
     const foundOwner = owners.find((owner) => {
-        if (owner.id === req.params.id) {
+        if (owner.id.toString() === req.params.id) {
+            console.log(owner);
             return owner
         }
     });
@@ -82,13 +84,15 @@ app.put('/api/owners/:id', (req, res, nextFn) => {
 
 app.delete('/api/owners/:id', (req, res, nextFn) => {
     console.log(req.params)
-    const ownerByID = owners.find((owner) => {
-        if (owners.id === req.params.id) {
-            let ownerIndex = owners.indexOf(owner.id);
-            owners.splice(ownerIndex,1)
+    owners = owners.filter((owner) => {
+        if (owner.id.toString() !== req.params.id) {
+            return true;
+        }
+        else {
+            return false;
         }
     });
-    res.send(`This is an updated list of all my to do items: ${res.send(owners)}`)
+    res.send(owners)
 });
 
 // GET /api/owners/:id/pets
