@@ -1,5 +1,6 @@
 var express = require('express');
 var bodyParser = require('body-parser');
+var uuidv1 = require('uuid/v1');
 
 var app = express();
 app.use(bodyParser.json());
@@ -40,16 +41,55 @@ var owners = [
 
 app.get('/api/owners', (req, res, nextFn) => {
     console.log(req.params)
-    res.send('this is a test')
+    res.send(owners)
 });
 
 // GET /api/owners/:id
 
+app.get('/api/owners/:id', (req, res, nextFn) => {
+    const ownerByID = owners.find((owner) => {
+        if (owner.id.toString() === req.params.id) {
+            return res.send(owner);
+        }
+    });
+});
+
 // POST /api/owners
+
+app.post('/api/owners', (req, res, nextFn) => {
+    newOwner = { 
+        id: uuidv1(), 
+        name: req.body.name,
+        pets: req.body.pets,
+    };
+    owners.push(newOwner);
+    res.send(`This is an updated list of all the pet owners: ${res.send(owners)}`)
+});
 
 // PUT /api/owners/:id
 
+app.put('/api/owners/:id', (req, res, nextFn) => {
+    const foundOwner = owners.find((owner) => {
+        if (owner.id === req.params.id) {
+            return owner
+        }
+    });
+    foundOwner.name = req.body.name
+    res.send(`This is an updated list of all the pet owners: ${res.send(owners)}`)
+});
+
 // DELETE /api/owners/:id
+
+app.delete('/api/owners/:id', (req, res, nextFn) => {
+    console.log(req.params)
+    const ownerByID = owners.find((owner) => {
+        if (owners.id === req.params.id) {
+            let ownerIndex = owners.indexOf(owner.id);
+            owners.splice(ownerIndex,1)
+        }
+    });
+    res.send(`This is an updated list of all my to do items: ${res.send(owners)}`)
+});
 
 // GET /api/owners/:id/pets
 
